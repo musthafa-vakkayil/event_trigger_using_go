@@ -28,7 +28,7 @@ func ProcessTriggers(triggerChannel <-chan string, db *sql.DB) {
 			scheduleTime = scheduleTime.UTC()
 			currentTime := time.Now().UTC()
 
-			fmt.Println("Schedule TIme", scheduleTime)
+			fmt.Println("Schedule TIme is", scheduleTime)
 			fmt.Println(currentTime)
 
 			// Calculate sleep duration
