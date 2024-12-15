@@ -12,6 +12,17 @@ import (
 	"github.com/google/uuid"
 )
 
+// CreateUser godoc
+// @Summary Create a new user
+// @Description Adds a new user to the system
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param user body swagger.UserDto true "User details"
+// @Success 200 {string} string "New User Created with ID"
+// @Failure 400 {object} map[string]string "Bad request"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /users/create [post]
 func CreateUser(c *gin.Context) {
 	var req model.User
 
@@ -55,6 +66,15 @@ func CreateUser(c *gin.Context) {
 	})
 }
 
+// DeleteUser godoc
+// @Summary Delete a user by ID
+// @Description Removes a user from the system
+// @Tags Users
+// @Param user_id path string true "User ID"
+// @Success 200 {string} string "User deleted successfully"
+// @Failure 400 {object} map[string]string "Bad request"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /users/{user_id} [delete]
 func DeleteUser(c *gin.Context) {
 	id := c.Param("user_id")
 	if id == "" {
@@ -77,6 +97,16 @@ func DeleteUser(c *gin.Context) {
 	})
 }
 
+// GetUserByID godoc
+// @Summary Get user by ID
+// @Description Retrieves a user based on the given ID
+// @Tags Users
+// @Param user_id path string true "User ID"
+// @Produce json
+// @Success 200 {object} model.User "User data"
+// @Failure 400 {object} map[string]string "Bad request"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /users/{user_id} [get]
 func GetUserByID(c *gin.Context) {
 	id := c.Param("user_id")
 	if id == "" {
@@ -100,11 +130,13 @@ func GetUserByID(c *gin.Context) {
 	c.JSON(http.StatusOK, msgdata)
 }
 
-// @Summary Get user list
-// @Description Get a list of all users
+// ListUsers godoc
+// @Summary List all users
+// @Description Retrieves a list of all users
 // @Tags Users
-// @Accept json
 // @Produce json
+// @Success 200 {array} model.User "List of users"
+// @Failure 500 {object} map[string]string "Internal server error"
 // @Router /users/ [get]
 func ListUsers(c *gin.Context) {
 
@@ -122,6 +154,16 @@ func ListUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, usrs)
 }
 
+// EditUser godoc
+// @Summary Edit user details
+// @Description Updates the information of a user
+// @Tags Users
+// @Param user_id path string true "User ID"
+// @Param user body swagger.UserDto true "Updated user details"
+// @Success 200 {string} string "User updated successfully"
+// @Failure 400 {object} map[string]string "Bad request"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /users/{user_id} [put]
 func EditUser(c *gin.Context) {
 	id := c.Param("user_id")
 	if id == "" {

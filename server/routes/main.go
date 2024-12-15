@@ -15,8 +15,10 @@ import (
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	ginSwagger "github.com/swaggo/gin-swagger"
 
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
 )
 
 type Api struct {
@@ -49,6 +51,8 @@ func (a *Api) AddReotes(version string) {
 	UserRoutes(a.Engine, version)
 	TriggerRoutes(a.Engine, version)
 	EventRoutes(a.Engine, version)
+
+	a.Engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }
 
 func (a *Api) MakeMigrations() *sql.DB {
@@ -82,7 +86,7 @@ func (a *Api) WithServer() Api {
 
 	go func() {
 		a.srv = &http.Server{
-			Addr:         fmt.Sprintf(":%s", "80"),
+			Addr:         fmt.Sprintf(":%s", "8080"),
 			Handler:      a.Engine,
 			ReadTimeout:  10 * time.Second,
 			WriteTimeout: 10 * time.Second,
