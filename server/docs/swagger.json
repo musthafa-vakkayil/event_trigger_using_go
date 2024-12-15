@@ -6,7 +6,7 @@
         "contact": {},
         "version": "1.0"
     },
-    "host": "52.54.182.167:8080",
+    "host": "18.205.239.53:8080",
     "basePath": "/v1",
     "paths": {
         "/events/": {
