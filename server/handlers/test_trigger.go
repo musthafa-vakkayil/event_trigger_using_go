@@ -107,7 +107,7 @@ func handleTestApiTrigger(c *gin.Context, trigger_id string, ApiMethod string, A
 	event := model.Event{
 		Id:        uuid.New().String(),
 		TriggerId: trigger_id,
-		EventTime: time.Now(),
+		EventTime: time.Now().UTC(),
 		Status:    "ACTIVE",
 		Manual:    true,
 	}
@@ -139,7 +139,7 @@ func handleTestScheduledTrigger(c *gin.Context, trigger_id string, scheduleTime 
 	event := model.Event{
 		Id:        uuid.New().String(),
 		TriggerId: trigger_id,
-		EventTime: time.Now(),
+		EventTime: time.Now().UTC(),
 		Status:    "ACTIVE",
 		Manual:    true,
 	}

@@ -292,7 +292,7 @@ func EditTrigger(c *gin.Context) {
 	}
 
 	// Update the `updated_at` field
-	trigger.UpdatedAt = time.Now()
+	trigger.UpdatedAt = time.Now().UTC()
 
 	// Update the trigger in the database
 	if err := repo.UpdateTrigger(pgClient, trigger); err != nil {
@@ -369,7 +369,7 @@ func TriggerAPI(c *gin.Context) {
 	event := model.Event{
 		Id:        uuid.New().String(),
 		TriggerId: trigger.Id,
-		EventTime: time.Now(),
+		EventTime: time.Now().UTC(),
 		Status:    "ACTIVE",
 		Manual:    true,
 	}
