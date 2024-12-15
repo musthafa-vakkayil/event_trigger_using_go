@@ -3,17 +3,17 @@ package config
 const (
 	CREATE_TABLE = `
 			CREATE TABLE IF NOT EXISTS users(
-  				id SERIAL PRIMARY KEY,
+  				id VARCHAR(50) PRIMARY KEY,
   				username VARCHAR(128) NOT NULL,
   				email VARCHAR(128) NOT NULL,
-  				password_hash VARCHAR(50) NOT NULL,
+  				password_hash VARCHAR(128) NOT NULL,
   				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   				updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   			);
 
 			CREATE TABLE IF NOT EXISTS triggers(
-  				id SERIAL PRIMARY KEY,
-  				name VARCHAR(50) NOT NULL,
+  				id VARCHAR(50) PRIMARY KEY,
+  				name VARCHAR(128) NOT NULL,
   				type VARCHAR(20) CHECK (type IN ('SCHEDULED', 'API')),
   				schedule_time TIMESTAMP DEFAULT NULL,
   				interval_seconds INT DEFAULT NULL,
@@ -25,8 +25,8 @@ const (
   			);
   
   			CREATE TABLE IF NOT EXISTS events(
-    			id SERIAL PRIMARY KEY,
-    			trigger_id INT NOT NULL,
+    			id VARCHAR(50) PRIMARY KEY,
+    			trigger_id VARCHAR(50) NOT NULL,
     			event_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     			status VARCHAR(20) CHECK (status IN ('ACTIVE', 'ARCHIVE')),
     			archived_time TIMESTAMP DEFAULT NULL,

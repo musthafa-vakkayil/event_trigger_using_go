@@ -7,9 +7,9 @@ import (
 	"event_trigger/utils"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func CreateUser(c *gin.Context) {
@@ -35,6 +35,7 @@ func CreateUser(c *gin.Context) {
 	}
 
 	usr := model.User{
+		UserId:       uuid.New().String(),
 		Username:     req.Username,
 		Email:        req.Email,
 		PasswordHash: passWordHash,
@@ -63,18 +64,16 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
-	user_id, _ := strconv.Atoi(id)
-
 	pgClient := c.MustGet("postgresClient").(*sql.DB)
 
-	if err := repo.DeleteUser(pgClient, user_id); err != nil {
+	if err := repo.DeleteUser(pgClient, id); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "unable to delete user",
 		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"message": fmt.Sprintf("User with id %d Deleted\n", user_id),
+		"message": fmt.Sprintf("User with id %s Deleted\n", id),
 	})
 }
 
@@ -87,11 +86,9 @@ func GetUserByID(c *gin.Context) {
 		return
 	}
 
-	user_id, _ := strconv.Atoi(id)
-
 	pgClient := c.MustGet("postgresClient").(*sql.DB)
 
-	msgdata, err := repo.GetUserByID(pgClient, user_id)
+	msgdata, err := repo.GetUserByID(pgClient, id)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -138,8 +135,6 @@ func EditUser(c *gin.Context) {
 
 	pgClient := c.MustGet("postgresClient").(*sql.DB)
 
-	user_id, _ := strconv.Atoi(id)
-
 	// Hash the password using bcrypt
 	passWordHash, err := utils.GeneratePasswordHash(req.PasswordHash)
 
@@ -151,7 +146,7 @@ func EditUser(c *gin.Context) {
 	}
 
 	msg := model.User{
-		UserId:       user_id,
+		UserId:       uuid.New().String(),
 		Username:     req.Username,
 		Email:        req.Email,
 		PasswordHash: passWordHash,
