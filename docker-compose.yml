@@ -7,7 +7,7 @@ services:
     shm_size: 128mb
     container_name: postgres_db
     environment:
-      - POSTGRES_DB=mydb
+      - POSTGRES_DB=eventdb
       - POSTGRES_USER=myuser
       - POSTGRES_PASSWORD=mypassword
     ports:
@@ -15,7 +15,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U myuser -d mydb"]
+      test: ["CMD-SHELL", "pg_isready -U myuser -d eventdb"]
       interval: 5s
       timeout: 5s
       retries: 5

@@ -1,7 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"event_trigger/routes"
+)
+
+var (
+	apiVersion = "v1"
+)
 
 func main() {
-	fmt.Println("Event Trigger Using GO")
+	a := routes.New(apiVersion)
+
+	a.Start(a.Engine)
 }
