@@ -14,6 +14,17 @@ import (
 	"github.com/google/uuid"
 )
 
+// CreateTrigger godoc
+// @Summary Create a new Trigger. API or Scheduled
+// @Description Adds a new Trigger to the system
+// @Tags Triggers
+// @Accept json
+// @Produce json
+// @Param user body swagger.TriggerDto true "Trigger details"
+// @Success 200 {string} string "New Trigger Created with ID"
+// @Failure 400 {object} map[string]string "Bad request"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /triggers/create [post]
 func CreateTrigger(c *gin.Context) {
 	var req model.TriggerDto
 
@@ -95,6 +106,15 @@ func CreateTrigger(c *gin.Context) {
 	})
 }
 
+// DeleteTrigger godoc
+// @Summary Delete a trigger by ID
+// @Description Removes a trigger from the system
+// @Tags Triggers
+// @Param trigger_id path string true "Trigger ID"
+// @Success 200 {string} string "Trigger deleted successfully"
+// @Failure 400 {object} map[string]string "Bad request"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /trigegrs/{trigger_id} [delete]
 func DeleteTrigger(c *gin.Context) {
 	id := c.Param("trigger_id")
 	if id == "" {
@@ -117,6 +137,16 @@ func DeleteTrigger(c *gin.Context) {
 	})
 }
 
+// GetTriggerByID godoc
+// @Summary Get trigger by ID
+// @Description Retrieves a trigger based on the given ID
+// @Tags Triggers
+// @Param trigger_id path string true "Trigger ID"
+// @Produce json
+// @Success 200 {object} model.Trigger "Trigger data"
+// @Failure 400 {object} map[string]string "Bad request"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /triggers/{trigger_id} [get]
 func GetTriggerByID(c *gin.Context) {
 	id := c.Param("trigger_id")
 	if id == "" {
@@ -140,6 +170,14 @@ func GetTriggerByID(c *gin.Context) {
 	c.JSON(http.StatusOK, msgdata)
 }
 
+// ListTriggers godoc
+// @Summary List all trigegrs
+// @Description Retrieves a list of all triggers
+// @Tags Triggers
+// @Produce json
+// @Success 200 {array} model.Trigger "List of triggers"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /triggers/ [get]
 func ListTriggers(c *gin.Context) {
 
 	pgClient := c.MustGet("postgresClient").(*sql.DB)
@@ -156,6 +194,16 @@ func ListTriggers(c *gin.Context) {
 	c.JSON(http.StatusOK, usrs)
 }
 
+// EditTrigegr godoc
+// @Summary Edit trigger details
+// @Description Updates the information of a trigger
+// @Tags Triggers
+// @Param trigger_id path string true "Trigegr ID"
+// @Param user body model.EditTriggerDto true "Updated trigger details"
+// @Success 200 {string} string "Trigger updated successfully"
+// @Failure 400 {object} map[string]string "Bad request"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /triggers/{trigger_id} [put]
 func EditTrigger(c *gin.Context) {
 	var req model.EditTriggerDto
 
@@ -260,6 +308,16 @@ func EditTrigger(c *gin.Context) {
 	})
 }
 
+// TriggerApiByID godoc
+// @Summary Trigger API By ID
+// @Description triggers a stored api trigger in the db
+// @Tags Events
+// @Param trigger_id path string true "Trigger ID"
+// @Produce json
+// @Success 200 {object} map[string]string "Response from API"
+// @Failure 400 {object} map[string]string "Bad request"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /triggers/api/{trigger_id} [get]
 func TriggerAPI(c *gin.Context) {
 	id := c.Param("trigger_id")
 	if id == "" {

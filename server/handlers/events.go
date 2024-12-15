@@ -8,6 +8,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// ListEventsHandler godoc
+// @Summary List events
+// @Description Retrieves a list of events with filtering options
+// @Tags Events
+// @Accept json
+// @Produce json
+// @Param includeArchived query bool false "Include archived events only (default: false)"
+// @Param includeAll query bool false "Include all events, both active and archived (default: false)"
+// @Success 200 {object} model.Event "List of events"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /events/ [get]
 func ListEventsHandler(c *gin.Context) {
 	pgClient := c.MustGet("postgresClient").(*sql.DB)
 

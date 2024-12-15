@@ -1,5 +1,71 @@
 basePath: /v1
 definitions:
+  model.EditTriggerDto:
+    description: EditTriggerDto object used for input and output
+    properties:
+      api_endpoint:
+        type: string
+      api_method:
+        type: string
+      api_payload:
+        items:
+          type: integer
+        type: array
+      interval_seconds:
+        type: integer
+      is_recurring:
+        type: boolean
+      name:
+        type: string
+      schedule_time:
+        type: integer
+      type:
+        type: string
+    type: object
+  model.Event:
+    description: Event object used for input and output
+    properties:
+      archived_time:
+        type: string
+      event_time:
+        type: string
+      id:
+        type: string
+      is_manual:
+        type: boolean
+      status:
+        type: string
+      trigger_id:
+        type: string
+    type: object
+  model.Trigger:
+    description: Trigger object used for input and output
+    properties:
+      api_endpoint:
+        type: string
+      api_method:
+        type: string
+      api_payload:
+        items:
+          type: integer
+        type: array
+      createdAt:
+        type: string
+      id:
+        type: string
+      interval_seconds:
+        type: integer
+      is_recurring:
+        type: boolean
+      name:
+        type: string
+      schedule_time:
+        type: string
+      type:
+        type: string
+      updatedAt:
+        type: string
+    type: object
   model.User:
     description: User object used for input and output
     properties:
@@ -10,6 +76,32 @@ definitions:
       password:
         type: string
       username:
+        type: string
+    type: object
+  swagger.TriggerDto:
+    description: TriggerDto object used for input and output
+    properties:
+      api_endpoint:
+        example: https://httpbin.org/get
+        type: string
+      api_method:
+        example: GET
+        type: string
+      api_payload:
+        items:
+          type: integer
+        type: array
+      interval_seconds:
+        type: integer
+      is_recurring:
+        type: boolean
+      name:
+        example: API Trigger
+        type: string
+      schedule_time:
+        type: integer
+      type:
+        example: API/SCHEDULED
         type: string
     type: object
   swagger.UserDto:
@@ -29,6 +121,36 @@ info:
   title: Event Trigger API
   version: "1.0"
 paths:
+  /events/:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a list of events with filtering options
+      parameters:
+      - description: 'Include archived events only (default: false)'
+        in: query
+        name: includeArchived
+        type: boolean
+      - description: 'Include all events, both active and archived (default: false)'
+        in: query
+        name: includeAll
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of events
+          schema:
+            $ref: '#/definitions/model.Event'
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: List events
+      tags:
+      - Events
   /health/:
     get:
       consumes:
@@ -46,6 +168,188 @@ paths:
       summary: Check the health of the server
       tags:
       - health
+  /trigegrs/{trigger_id}:
+    delete:
+      description: Removes a trigger from the system
+      parameters:
+      - description: Trigger ID
+        in: path
+        name: trigger_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Trigger deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete a trigger by ID
+      tags:
+      - Triggers
+  /triggers/:
+    get:
+      description: Retrieves a list of all triggers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of triggers
+          schema:
+            items:
+              $ref: '#/definitions/model.Trigger'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: List all trigegrs
+      tags:
+      - Triggers
+  /triggers/{trigger_id}:
+    get:
+      description: Retrieves a trigger based on the given ID
+      parameters:
+      - description: Trigger ID
+        in: path
+        name: trigger_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Trigger data
+          schema:
+            $ref: '#/definitions/model.Trigger'
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get trigger by ID
+      tags:
+      - Triggers
+    put:
+      description: Updates the information of a trigger
+      parameters:
+      - description: Trigegr ID
+        in: path
+        name: trigger_id
+        required: true
+        type: string
+      - description: Updated trigger details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.EditTriggerDto'
+      responses:
+        "200":
+          description: Trigger updated successfully
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Edit trigger details
+      tags:
+      - Triggers
+  /triggers/api/{trigger_id}:
+    get:
+      description: triggers a stored api trigger in the db
+      parameters:
+      - description: Trigger ID
+        in: path
+        name: trigger_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Response from API
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Trigger API By ID
+      tags:
+      - Events
+  /triggers/create:
+    post:
+      consumes:
+      - application/json
+      description: Adds a new Trigger to the system
+      parameters:
+      - description: Trigger details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/swagger.TriggerDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: New Trigger Created with ID
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new Trigger. API or Scheduled
+      tags:
+      - Triggers
   /users/:
     get:
       description: Retrieves a list of all users
@@ -171,7 +475,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/model.User'
+          $ref: '#/definitions/swagger.UserDto'
       produces:
       - application/json
       responses:

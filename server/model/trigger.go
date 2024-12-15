@@ -6,6 +6,7 @@ import (
 	"gorm.io/datatypes"
 )
 
+// @Description Trigger object used for input and output
 type Trigger struct {
 	Id           string         `json:"id"`
 	Name         string         `json:"name"`
@@ -31,6 +32,7 @@ type TriggerDto struct {
 	Recurring    bool           `json:"is_recurring"`
 }
 
+// @Description EditTriggerDto object used for input and output
 type EditTriggerDto struct {
 	Name         *string         `json:"name"`
 	Type         *string         `json:"type"`

@@ -15,6 +15,52 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/events/": {
+            "get": {
+                "description": "Retrieves a list of events with filtering options",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Events"
+                ],
+                "summary": "List events",
+                "parameters": [
+                    {
+                        "type": "boolean",
+                        "description": "Include archived events only (default: false)",
+                        "name": "includeArchived",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Include all events, both active and archived (default: false)",
+                        "name": "includeAll",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of events",
+                        "schema": {
+                            "$ref": "#/definitions/model.Event"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/health/": {
             "get": {
                 "description": "Returns the server's health status",
@@ -31,6 +77,282 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/trigegrs/{trigger_id}": {
+            "delete": {
+                "description": "Removes a trigger from the system",
+                "tags": [
+                    "Triggers"
+                ],
+                "summary": "Delete a trigger by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Trigger ID",
+                        "name": "trigger_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Trigger deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/triggers/": {
+            "get": {
+                "description": "Retrieves a list of all triggers",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Triggers"
+                ],
+                "summary": "List all trigegrs",
+                "responses": {
+                    "200": {
+                        "description": "List of triggers",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Trigger"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/triggers/api/{trigger_id}": {
+            "get": {
+                "description": "triggers a stored api trigger in the db",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Trigger API By ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Trigger ID",
+                        "name": "trigger_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Response from API",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/triggers/create": {
+            "post": {
+                "description": "Adds a new Trigger to the system",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Triggers"
+                ],
+                "summary": "Create a new Trigger. API or Scheduled",
+                "parameters": [
+                    {
+                        "description": "Trigger details",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/swagger.TriggerDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "New Trigger Created with ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/triggers/{trigger_id}": {
+            "get": {
+                "description": "Retrieves a trigger based on the given ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Triggers"
+                ],
+                "summary": "Get trigger by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Trigger ID",
+                        "name": "trigger_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Trigger data",
+                        "schema": {
+                            "$ref": "#/definitions/model.Trigger"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Updates the information of a trigger",
+                "tags": [
+                    "Triggers"
+                ],
+                "summary": "Edit trigger details",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Trigegr ID",
+                        "name": "trigger_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated trigger details",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.EditTriggerDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Trigger updated successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -93,7 +415,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.User"
+                            "$ref": "#/definitions/swagger.UserDto"
                         }
                     }
                 ],
@@ -267,6 +589,105 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "model.EditTriggerDto": {
+            "description": "EditTriggerDto object used for input and output",
+            "type": "object",
+            "properties": {
+                "api_endpoint": {
+                    "type": "string"
+                },
+                "api_method": {
+                    "type": "string"
+                },
+                "api_payload": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "interval_seconds": {
+                    "type": "integer"
+                },
+                "is_recurring": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "schedule_time": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Event": {
+            "description": "Event object used for input and output",
+            "type": "object",
+            "properties": {
+                "archived_time": {
+                    "type": "string"
+                },
+                "event_time": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_manual": {
+                    "type": "boolean"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "trigger_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Trigger": {
+            "description": "Trigger object used for input and output",
+            "type": "object",
+            "properties": {
+                "api_endpoint": {
+                    "type": "string"
+                },
+                "api_method": {
+                    "type": "string"
+                },
+                "api_payload": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "interval_seconds": {
+                    "type": "integer"
+                },
+                "is_recurring": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "schedule_time": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
         "model.User": {
             "description": "User object used for input and output",
             "type": "object",
@@ -282,6 +703,43 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "swagger.TriggerDto": {
+            "description": "TriggerDto object used for input and output",
+            "type": "object",
+            "properties": {
+                "api_endpoint": {
+                    "type": "string",
+                    "example": "https://httpbin.org/get"
+                },
+                "api_method": {
+                    "type": "string",
+                    "example": "GET"
+                },
+                "api_payload": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "interval_seconds": {
+                    "type": "integer"
+                },
+                "is_recurring": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "API Trigger"
+                },
+                "schedule_time": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string",
+                    "example": "API/SCHEDULED"
                 }
             }
         },
