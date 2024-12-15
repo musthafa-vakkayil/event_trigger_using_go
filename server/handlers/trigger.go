@@ -33,9 +33,9 @@ func CreateTrigger(c *gin.Context) {
 
 	// Validation for API Trigger
 	if req.Type == "API" {
-		if req.ApiEndpoint == "" || req.ApiPayload == nil {
+		if req.ApiEndpoint == "" || req.ApiMethod == "" {
 			c.JSON(http.StatusBadRequest, gin.H{
-				"error": "API Endpoint and Payload are required for API Trigger",
+				"error": "API Endpoint and Method are required for API Trigger",
 			})
 			return
 		}
@@ -66,6 +66,7 @@ func CreateTrigger(c *gin.Context) {
 		// Set fields for API Trigger
 		trigger.ApiEndpoint = req.ApiEndpoint
 		trigger.ApiPayload = req.ApiPayload
+		trigger.ApiMethod = req.ApiMethod
 		trigger.Interval = nil
 		trigger.ScheduleTime = nil
 	} else if req.Type == "SCHEDULED" {
@@ -184,7 +185,7 @@ func EditTrigger(c *gin.Context) {
 
 	// Validation for API Trigger
 	if req.Type != nil && *req.Type == "API" {
-		if req.ApiEndpoint != nil && *req.ApiEndpoint == "" {
+		if req.ApiEndpoint != nil && *req.ApiMethod == "" {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error": "API Endpoint cannot be empty for API Trigger",
 			})
@@ -234,10 +235,15 @@ func EditTrigger(c *gin.Context) {
 	if req.ApiPayload != nil {
 		trigger.ApiPayload = *req.ApiPayload
 	}
+	if req.ApiMethod != nil {
+		trigger.ApiMethod = *req.ApiMethod
+	}
 	if req.Recurring != nil {
 		trigger.Recurring = *req.Recurring
 	}
-	trigger.UpdatedAt = time.Now() // Update the `updated_at` field
+
+	// Update the `updated_at` field
+	trigger.UpdatedAt = time.Now()
 
 	// Update the trigger in the database
 	if err := repo.UpdateTrigger(pgClient, trigger); err != nil {

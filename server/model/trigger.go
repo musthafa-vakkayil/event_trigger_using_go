@@ -14,6 +14,7 @@ type Trigger struct {
 	Interval     *int           `json:"interval_seconds"`
 	ApiEndpoint  string         `json:"api_endpoint"`
 	ApiPayload   datatypes.JSON `json:"api_payload"`
+	ApiMethod    string         `json:"api_method"`
 	Recurring    bool           `json:"is_recurring"`
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
@@ -26,6 +27,7 @@ type TriggerDto struct {
 	Interval     *int           `json:"interval_seconds"`
 	ApiEndpoint  string         `json:"api_endpoint"`
 	ApiPayload   datatypes.JSON `json:"api_payload"`
+	ApiMethod    string         `json:"api_method"`
 	Recurring    bool           `json:"is_recurring"`
 }
 
@@ -36,5 +38,6 @@ type EditTriggerDto struct {
 	Interval     *int            `json:"interval_seconds"`
 	ApiEndpoint  *string         `json:"api_endpoint"`
 	ApiPayload   *datatypes.JSON `json:"api_payload"`
+	ApiMethod    *string         `json:"api_method"`
 	Recurring    *bool           `json:"is_recurring"`
 }

@@ -19,6 +19,7 @@ const (
   				interval_seconds INT DEFAULT NULL,
   				api_endpoint VARCHAR(255) DEFAULT NULL,
   				api_payload JSON DEFAULT NULL,
+				api_method VARCHAR(20) CHECK (api_method IN ('GET', 'POST', 'PUT', 'PATCH', 'DELETE'))
   				is_recurring BOOLEAN DEFAULT FALSE,
   				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   				updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
