@@ -51,6 +51,7 @@ func (a *Api) AddReotes(version string) {
 	UserRoutes(a.Engine, version)
 	TriggerRoutes(a.Engine, version)
 	EventRoutes(a.Engine, version)
+	TestTriggerRoutes(a.Engine, version)
 
 	a.Engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }

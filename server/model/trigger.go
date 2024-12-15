@@ -29,8 +29,8 @@ type TriggerDto struct {
 	Interval     int            `json:"interval_seconds"`
 	ApiEndpoint  string         `json:"api_endpoint" example:"https://httpbin.org/get"`
 	ApiPayload   datatypes.JSON `json:"api_payload"`
-	ApiMethod    string         `json:"api_method"`
-	Recurring    bool           `json:"is_recurring" example:"GET"`
+	ApiMethod    string         `json:"api_method" example:"GET"`
+	Recurring    bool           `json:"is_recurring"`
 }
 
 // @Description EditTriggerDto object used for input and output

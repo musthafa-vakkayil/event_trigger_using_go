@@ -71,12 +71,64 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "health"
+                    "Health"
                 ],
                 "summary": "Check the health of the server",
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/test/trigger": {
+            "post": {
+                "description": "Executes API trigegr or One Time Scheduled Trigger Without Saving, but can see in logs",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Test"
+                ],
+                "summary": "excute a trigger without saving",
+                "parameters": [
+                    {
+                        "description": "Trigger details",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.TriggerDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "API response / Trigger Scheduled Successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -233,7 +285,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/swagger.TriggerDto"
+                            "$ref": "#/definitions/model.TriggerDto"
                         }
                     }
                 ],
@@ -415,7 +467,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/swagger.UserDto"
+                            "$ref": "#/definitions/model.UserDto"
                         }
                     }
                 ],
@@ -513,7 +565,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/swagger.UserDto"
+                            "$ref": "#/definitions/model.UserDto"
                         }
                     }
                 ],
@@ -626,9 +678,6 @@ const docTemplate = `{
             "description": "Event object used for input and output",
             "type": "object",
             "properties": {
-                "archived_time": {
-                    "type": "string"
-                },
                 "event_time": {
                     "type": "string"
                 },
@@ -688,27 +737,13 @@ const docTemplate = `{
                 }
             }
         },
-        "model.User": {
-            "description": "User object used for input and output",
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
-        "swagger.TriggerDto": {
+        "model.TriggerDto": {
             "description": "TriggerDto object used for input and output",
             "type": "object",
+            "required": [
+                "name",
+                "type"
+            ],
             "properties": {
                 "api_endpoint": {
                     "type": "string",
@@ -743,7 +778,25 @@ const docTemplate = `{
                 }
             }
         },
-        "swagger.UserDto": {
+        "model.User": {
+            "description": "User object used for input and output",
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.UserDto": {
             "description": "UserDto object used for input and output",
             "type": "object",
             "properties": {
