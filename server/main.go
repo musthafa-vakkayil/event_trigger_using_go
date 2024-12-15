@@ -13,7 +13,7 @@ var (
 // @version 1.0
 // @description This is an API for the Event Trigger application.
 
-// @host 184.73.123.142:8080
+// @host 52.54.182.167:8080
 // @BasePath /v1
 func main() {
 
