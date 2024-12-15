@@ -36,6 +36,7 @@ func (a *Api) Init(version string) (*gin.Engine, error) {
 
 func (a *Api) AddReotes(version string) {
 	HealthRoutes(a.Engine, version)
+	UserRoutes(a.Engine, version)
 }
 
 func (a *Api) MakeMigrations() {
