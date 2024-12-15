@@ -51,7 +51,7 @@ func CreateUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": fmt.Sprintf("New User Created with id %d\n", id),
+		"message": fmt.Sprintf("New User Created with id %s\n", id),
 	})
 }
 
@@ -108,7 +108,7 @@ func ListUsers(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "unable to get messages",
+			"error": "unable to get users",
 		})
 		return
 	}

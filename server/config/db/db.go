@@ -19,7 +19,7 @@ const (
   				interval_seconds INT DEFAULT NULL,
   				api_endpoint VARCHAR(255) DEFAULT NULL,
   				api_payload JSON DEFAULT NULL,
-  				is_recurrring BOOLEAN DEFAULT FALSE,
+  				is_recurring BOOLEAN DEFAULT FALSE,
   				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   				updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   			);
