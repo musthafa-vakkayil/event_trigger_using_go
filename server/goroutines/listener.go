@@ -3,13 +3,15 @@ package goroutines
 import (
 	"database/sql"
 	"log"
+	"os"
 	"time"
 
 	"github.com/lib/pq"
 )
 
 func ListenForTriggers(db *sql.DB, triggerChannel chan<- string) {
-	listener := pq.NewListener("postgres://myuser:mypassword@postgres_db:5432/eventdb?sslmode=disable&TimeZone=UTC",
+	dbString := os.Getenv("DB_CONNECTION")
+	listener := pq.NewListener(dbString,
 		10*time.Second, time.Minute, func(ev pq.ListenerEventType, err error) {
 			if err != nil {
 				log.Printf("Listener error: %v", err)

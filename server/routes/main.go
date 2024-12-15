@@ -13,6 +13,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 
 	"github.com/gin-gonic/gin"
@@ -24,6 +25,10 @@ type Api struct {
 }
 
 func (a *Api) Init(version string) (*gin.Engine, error) {
+	err := godotenv.Load()
+	if err != nil {
+		log.Println("Error loading .env file, using system environment variables")
+	}
 	r := gin.New()
 	r.Use(gin.Recovery())
 	r.Use(gin.Logger())
@@ -47,7 +52,8 @@ func (a *Api) AddReotes(version string) {
 }
 
 func (a *Api) MakeMigrations() *sql.DB {
-	db, err := sql.Open("postgres", "postgres://myuser:mypassword@postgres_db:5432/eventdb?sslmode=disable")
+	dbString := os.Getenv("DB_CONNECTION")
+	db, err := sql.Open("postgres", dbString)
 	if err != nil {
 		log.Fatalf("Error connecting to DB: %v", err)
 	}

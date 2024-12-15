@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"database/sql"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -9,7 +10,8 @@ import (
 
 func PostgresMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		db, err := sql.Open("postgres", "postgres://myuser:mypassword@postgres_db:5432/eventdb?sslmode=disable")
+		dbString := os.Getenv("DB_CONNECTION")
+		db, err := sql.Open("postgres", dbString)
 		if err != nil {
 			panic(err)
 		}

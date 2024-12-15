@@ -100,6 +100,12 @@ func GetUserByID(c *gin.Context) {
 	c.JSON(http.StatusOK, msgdata)
 }
 
+// @Summary Get user list
+// @Description Get a list of all users
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Router /users/ [get]
 func ListUsers(c *gin.Context) {
 
 	pgClient := c.MustGet("postgresClient").(*sql.DB)
