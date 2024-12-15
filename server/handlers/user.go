@@ -18,7 +18,7 @@ import (
 // @Tags Users
 // @Accept json
 // @Produce json
-// @Param user body swagger.UserDto true "User details"
+// @Param user body model.UserDto true "User details"
 // @Success 200 {string} string "New User Created with ID"
 // @Failure 400 {object} map[string]string "Bad request"
 // @Failure 500 {object} map[string]string "Internal server error"
@@ -159,7 +159,7 @@ func ListUsers(c *gin.Context) {
 // @Description Updates the information of a user
 // @Tags Users
 // @Param user_id path string true "User ID"
-// @Param user body swagger.UserDto true "Updated user details"
+// @Param user body model.UserDto true "Updated user details"
 // @Success 200 {string} string "User updated successfully"
 // @Failure 400 {object} map[string]string "Bad request"
 // @Failure 500 {object} map[string]string "Internal server error"

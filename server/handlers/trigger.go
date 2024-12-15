@@ -20,7 +20,7 @@ import (
 // @Tags Triggers
 // @Accept json
 // @Produce json
-// @Param user body swagger.TriggerDto true "Trigger details"
+// @Param user body model.TriggerDto true "Trigger details"
 // @Success 200 {string} string "New Trigger Created with ID"
 // @Failure 400 {object} map[string]string "Bad request"
 // @Failure 500 {object} map[string]string "Internal server error"
@@ -367,12 +367,11 @@ func TriggerAPI(c *gin.Context) {
 
 	// Create Event
 	event := model.Event{
-		Id:           uuid.New().String(),
-		TriggerId:    trigger.Id,
-		EventTime:    time.Now(),
-		Status:       "ACTIVE",
-		ArchivedTime: time.Time{}, // Use zero value for ArchivedTime (NULL in DB)
-		Manual:       true,
+		Id:        uuid.New().String(),
+		TriggerId: trigger.Id,
+		EventTime: time.Now(),
+		Status:    "ACTIVE",
+		Manual:    true,
 	}
 
 	_, evErr := repo.CreateEvent(pgClient, event)

@@ -8,11 +8,11 @@ import (
 )
 
 func CreateEvent(db *sql.DB, eve model.Event) (string, error) {
-	stmt := "INSERT INTO public.events(id, trigger_id, event_time, status, archived_time, is_manual) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id"
+	stmt := "INSERT INTO public.events(id, trigger_id, event_time, status, is_manual) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id"
 
 	var id string
 
-	if err := db.QueryRow(stmt, eve.Id, eve.TriggerId, eve.EventTime, eve.Status, eve.ArchivedTime, eve.Manual).Scan(&id); err != nil {
+	if err := db.QueryRow(stmt, eve.Id, eve.TriggerId, eve.EventTime, eve.Status, eve.Manual).Scan(&id); err != nil {
 		log.Print(err)
 		return "", err
 	}
@@ -26,13 +26,13 @@ func ListEvents(db *sql.DB, includeArchived bool, includeAll bool) ([]model.Even
 	var stmt string
 	if includeAll {
 		// Select all events (both ACTIVE and ARCHIVE)
-		stmt = "SELECT id, trigger_id, event_time, status, archived_time, is_manual FROM public.events"
+		stmt = "SELECT id, trigger_id, event_time, status, is_manual FROM public.events"
 	} else if includeArchived {
 		// Select only archived events
-		stmt = "SELECT id, trigger_id, event_time, status, archived_time, is_manual FROM public.events WHERE status = 'ARCHIVE'"
+		stmt = "SELECT id, trigger_id, event_time, status, is_manual FROM public.events WHERE status = 'ARCHIVE'"
 	} else {
 		// Select only active events
-		stmt = "SELECT id, trigger_id, event_time, status, archived_time, is_manual FROM public.events WHERE status = 'ACTIVE'"
+		stmt = "SELECT id, trigger_id, event_time, status, is_manual FROM public.events WHERE status = 'ACTIVE'"
 	}
 
 	// Execute the query
@@ -46,7 +46,7 @@ func ListEvents(db *sql.DB, includeArchived bool, includeAll bool) ([]model.Even
 	var events []model.Event
 	for rows.Next() {
 		var event model.Event
-		err := rows.Scan(&event.Id, &event.TriggerId, &event.EventTime, &event.Status, &event.ArchivedTime, &event.Manual)
+		err := rows.Scan(&event.Id, &event.TriggerId, &event.EventTime, &event.Status, &event.Manual)
 		if err != nil {
 			return nil, err
 		}

@@ -8,3 +8,10 @@ type User struct {
 	Email        string `json:"email"`
 	PasswordHash string `json:"password"`
 }
+
+// @Description UserDto object used for input and output
+type UserDto struct {
+	Username     string `json:"username"`
+	Email        string `json:"email"`
+	PasswordHash string `json:"password"`
+}
