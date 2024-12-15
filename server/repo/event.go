@@ -8,7 +8,7 @@ import (
 )
 
 func CreateEvent(db *sql.DB, eve model.Event) (string, error) {
-	stmt := "INSERT INTO public.events(id, trigger_id, event_time, status, is_manual) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id"
+	stmt := "INSERT INTO public.events(id, trigger_id, event_time, status, is_manual) VALUES ($1, $2, $3, $4, $5) RETURNING id"
 
 	var id string
 
