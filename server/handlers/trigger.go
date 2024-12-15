@@ -62,18 +62,17 @@ func CreateTrigger(c *gin.Context) {
 	trigger.Name = req.Name
 	trigger.Type = req.Type
 	trigger.Recurring = req.Recurring
-	now := time.Now()
 
 	if req.Type == "API" {
 		// Set fields for API Trigger
 		trigger.ApiEndpoint = req.ApiEndpoint
 		trigger.ApiPayload = req.ApiPayload
 		trigger.ApiMethod = req.ApiMethod
-		trigger.Interval = nil
+		trigger.Interval = 0
 		trigger.ScheduleTime = nil
 	} else if req.Type == "SCHEDULED" {
 		// Set fields for Scheduled Trigger
-		scheduledTime := now.Add(time.Duration(req.ScheduleTime) * time.Second)
+		scheduledTime := time.Now().UTC().Add(time.Duration(req.ScheduleTime) * time.Second)
 		trigger.ScheduleTime = &scheduledTime
 		trigger.ApiEndpoint = ""
 		trigger.ApiPayload = nil
@@ -225,10 +224,10 @@ func EditTrigger(c *gin.Context) {
 		trigger.Type = *req.Type
 	}
 	if req.ScheduleTime != nil {
-		scheduledTime := time.Now().Add(time.Duration(*req.ScheduleTime) * time.Second)
+		scheduledTime := time.Now().UTC().Add(time.Duration(*req.ScheduleTime) * time.Second)
 		trigger.ScheduleTime = &scheduledTime
 	}
-	if req.Interval != nil {
+	if req.Interval != 0 {
 		trigger.Interval = req.Interval
 	}
 	if req.ApiEndpoint != nil {

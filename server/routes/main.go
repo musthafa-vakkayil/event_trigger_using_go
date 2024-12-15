@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	config "event_trigger/config/db"
+	"event_trigger/goroutines"
 	"fmt"
 	"log"
 	"net/http"
@@ -30,7 +31,11 @@ func (a *Api) Init(version string) (*gin.Engine, error) {
 	a.Engine = r
 	a.AddReotes(version)
 	a.WithServer()
-	a.MakeMigrations()
+
+	// Run migrations and initialize Go routines
+	db := a.MakeMigrations()
+	a.InitGoRoutines(db)
+
 	return r, nil
 }
 
@@ -41,20 +46,18 @@ func (a *Api) AddReotes(version string) {
 	EventRoutes(a.Engine, version)
 }
 
-func (a *Api) MakeMigrations() {
+func (a *Api) MakeMigrations() *sql.DB {
 	db, err := sql.Open("postgres", "postgres://myuser:mypassword@postgres_db:5432/eventdb?sslmode=disable")
 	if err != nil {
 		log.Fatalf("Error connecting to DB: %v", err)
 	}
-
-	defer db.Close()
 
 	err = db.Ping()
 	if err != nil {
 		log.Fatalf("Error pinging DB: %v", err)
 	}
 
-	exprs := []string{config.CREATE_TABLE}
+	exprs := []string{config.CREATE_TABLE, config.CREATE_TRIGGER}
 
 	for _, expr := range exprs {
 		log.Printf("Executing SQL: %s\n", expr)
@@ -64,6 +67,8 @@ func (a *Api) MakeMigrations() {
 			log.Println("Query executed successfully.")
 		}
 	}
+
+	return db
 }
 
 func (a *Api) WithServer() Api {
@@ -123,4 +128,19 @@ func New(apiVersion string) Api {
 
 	api.Engine = r
 	return api
+}
+
+func (a *Api) InitGoRoutines(db *sql.DB) {
+	// Create channels
+	triggerChannel := make(chan string)
+	archiveChannel := make(chan string)
+
+	// Start Go routines
+	go goroutines.ListenForTriggers(db, triggerChannel)
+	go goroutines.ProcessTriggers(triggerChannel, db)
+	go goroutines.ArchiveLogs(db, archiveChannel)
+	go goroutines.ProcessArchiving(db, archiveChannel)
+	go goroutines.DeleteLogs(db)
+
+	log.Println("Go routines initialized and running...")
 }

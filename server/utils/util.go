@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -48,4 +49,8 @@ func MakeAPICall(method string, url string, payload []byte) (*http.Response, err
 	}
 
 	return resp, nil
+}
+
+func GenerateID() string {
+	return uuid.New().String()
 }
