@@ -38,6 +38,7 @@ func (a *Api) AddReotes(version string) {
 	HealthRoutes(a.Engine, version)
 	UserRoutes(a.Engine, version)
 	TriggerRoutes(a.Engine, version)
+	EventRoutes(a.Engine, version)
 }
 
 func (a *Api) MakeMigrations() {

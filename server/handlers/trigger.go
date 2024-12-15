@@ -4,7 +4,9 @@ import (
 	"database/sql"
 	"event_trigger/model"
 	"event_trigger/repo"
+	"event_trigger/utils"
 	"fmt"
+	"io"
 	"net/http"
 	"time"
 
@@ -256,5 +258,78 @@ func EditTrigger(c *gin.Context) {
 	// Return success response
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Trigger updated successfully",
+	})
+}
+
+func TriggerAPI(c *gin.Context) {
+	id := c.Param("trigger_id")
+	if id == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "trigger_id query param is required",
+		})
+		return
+	}
+
+	pgClient := c.MustGet("postgresClient").(*sql.DB)
+
+	trigger, err := repo.GetTriggerByID(pgClient, id)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Trigger not found",
+		})
+		return
+	}
+
+	if trigger.Type != "API" {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "This endpoint is for triggering API triggers",
+		})
+		return
+	}
+
+	// Use the utility function to make the API call
+	payload := []byte(trigger.ApiPayload)
+	resp, err := utils.MakeAPICall(trigger.ApiMethod, trigger.ApiEndpoint, payload)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to execute API trigger: " + err.Error(),
+		})
+		return
+	}
+	defer resp.Body.Close()
+
+	// Read the response body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to read HTTP response",
+		})
+		return
+	}
+
+	// Create Event
+	event := model.Event{
+		Id:           uuid.New().String(),
+		TriggerId:    trigger.Id,
+		EventTime:    time.Now(),
+		Status:       "ACTIVE",
+		ArchivedTime: time.Time{}, // Use zero value for ArchivedTime (NULL in DB)
+		Manual:       true,
+	}
+
+	_, evErr := repo.CreateEvent(pgClient, event)
+	if evErr != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Error While Creating Event Log",
+		})
+		return
+	}
+
+	// Return the API response
+	c.JSON(http.StatusOK, gin.H{
+		"message":  "API trigger executed successfully",
+		"response": string(body),
+		"status":   resp.StatusCode,
 	})
 }

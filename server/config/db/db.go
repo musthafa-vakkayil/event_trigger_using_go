@@ -19,7 +19,7 @@ const (
   				interval_seconds INT DEFAULT NULL,
   				api_endpoint VARCHAR(255) DEFAULT NULL,
   				api_payload JSON DEFAULT NULL,
-				api_method VARCHAR(20) CHECK (api_method IN ('GET', 'POST', 'PUT', 'PATCH', 'DELETE'))
+				api_method VARCHAR(20) CHECK (api_method IN ('GET', 'POST', 'PUT', 'PATCH', 'DELETE')),
   				is_recurring BOOLEAN DEFAULT FALSE,
   				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   				updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -31,8 +31,7 @@ const (
     			event_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     			status VARCHAR(20) CHECK (status IN ('ACTIVE', 'ARCHIVE')),
     			archived_time TIMESTAMP DEFAULT NULL,
-    			is_manual BOOLEAN DEFAULT FALSE,
-    			FOREIGN KEY(trigger_id) REFERENCES triggers(id)
-    	);
+    			is_manual BOOLEAN DEFAULT FALSE
+    		);
 	`
 )

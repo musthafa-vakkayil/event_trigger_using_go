@@ -15,4 +15,5 @@ func TriggerRoutes(r *gin.Engine, v string) {
 	u.GET("/:trigger_id", handlers.GetTriggerByID)
 	u.DELETE("/:trigger_id", handlers.DeleteTrigger)
 	u.PUT("/:trigger_id", handlers.EditTrigger)
+	u.GET("/trigger/api/:trigger_id", handlers.TriggerAPI)
 }
