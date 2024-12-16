@@ -13,6 +13,9 @@ Below are the resources utilized to create this server:
 
 ---
 
+## Developer Note
+This is not a fully robust solution to the problem. Given the time constraints, I did my best to provide a working solution, but I am aware that it lacks some functionalities and does not handle certain edge cases. However, this has been a wonderful learning experience and an opportunity to expand my knowledge. Thank you for this opportunity; it has given me a solid foundation to improve and build further.
+
 ## About this Project
 
 This project is a **Golang-based Trigger Scheduler App** that allows users to schedule and manage triggers. Triggers can be of two types:
@@ -68,17 +71,43 @@ Timings for log states can be easily adjusted in the code.
 ---
 
 ## Technical Details
+ERD Diagram is given below
 ![Blank diagram - Page 1](https://github.com/user-attachments/assets/6b586fba-8862-4e53-a81c-72ae7dd63388)
 ### 1. Database Details
-We use **Postgres** as the database, which includes three tables:
-- **Triggers**
-- **Events**
-- **Users**
+We use **PostgreSQL** as the database, consisting of three tables:  
+- **Triggers**  
+- **Events**  
+- **Users**  
 
-Currently, there are no foreign key relationships to avoid complexity. The tables are straightforward.
+To keep the design simple, there are no foreign key relationships. The tables are straightforward and easy to work with.  
+
+Additionally, the following PostgreSQL triggers are implemented to notify the Go application whenever a new trigger is created. Below is the SQL code for this functionality:  
+
+```sql
+CREATE OR REPLACE FUNCTION notify_trigger() 
+RETURNS TRIGGER AS $$
+BEGIN
+    PERFORM pg_notify('trigger_channel', NEW.id);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER schedule_notify 
+AFTER INSERT OR UPDATE ON triggers
+FOR EACH ROW 
+EXECUTE FUNCTION notify_trigger();
+```
 
 ### 2. Server Details
-The system uses Golang to handle trigger scheduling, API requests, and log management. The architecture ensures flexibility and scalability.
+The server is implemented using Golang and is responsible for:
+
+- **Trigger scheduling**
+- **Handling API requests**
+- **Log management**
+
+**Folder Structure:** The code is organized into separate folders for better readability and maintainability. Eg:
+- Handlers: Handles incoming API requests.
+- Repo: Manages database interactions.
 
 
 ## Deployment Details
