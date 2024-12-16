@@ -10,10 +10,10 @@ import (
 func TriggerRoutes(r *gin.Engine, v string) {
 	u := r.Group(v + "/triggers")
 	u.Use(middleware.PostgresMiddleware())
-	u.POST("/create", handlers.CreateTrigger)
-	u.GET("/", handlers.ListTriggers)
-	u.GET("/:trigger_id", handlers.GetTriggerByID)
-	u.DELETE("/:trigger_id", handlers.DeleteTrigger)
-	u.PUT("/:trigger_id", handlers.EditTrigger)
-	u.GET("/api/:trigger_id", handlers.TriggerAPI)
+	u.POST("/create", handlers.CreateTriggerHandler)
+	u.GET("/", handlers.ListTriggersHandler)
+	u.GET("/:trigger_id", handlers.GetTriggerByIDHandler)
+	u.DELETE("/:trigger_id", handlers.DeleteTriggerHandler)
+	u.PUT("/:trigger_id", handlers.EditTriggerHandler)
+	u.GET("/api/:trigger_id", handlers.TriggerAPIHandler)
 }

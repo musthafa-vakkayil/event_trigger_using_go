@@ -6,13 +6,14 @@ import (
 	"time"
 )
 
+// This function will change the log status to atrchive after 2 hours
 func ArchiveLogs(db *sql.DB, archiveChannel chan<- string) {
 	ticker := time.NewTicker(1 * time.Minute)
 	defer ticker.Stop()
 
 	for range ticker.C {
 		rows, err := db.Query(
-			"SELECT id FROM events WHERE status = 'ACTIVE' AND event_time <= NOW() - INTERVAL '5 Minutes'",
+			"SELECT id FROM events WHERE status = 'ACTIVE' AND event_time <= NOW() - INTERVAL '2 Hour'",
 		)
 		if err != nil {
 			log.Printf("Error fetching logs for archiving: %v", err)
@@ -31,6 +32,7 @@ func ArchiveLogs(db *sql.DB, archiveChannel chan<- string) {
 	}
 }
 
+// Update log status to Archive
 func ProcessArchiving(db *sql.DB, archiveChannel <-chan string) {
 	for logID := range archiveChannel {
 		_, err := db.Exec(
@@ -44,13 +46,14 @@ func ProcessArchiving(db *sql.DB, archiveChannel <-chan string) {
 	}
 }
 
+// function to Delete The logs after Archiving
 func DeleteLogs(db *sql.DB) {
 	ticker := time.NewTicker(1 * time.Minute)
 	defer ticker.Stop()
 
 	for range ticker.C {
 		_, err := db.Exec(
-			"DELETE FROM events WHERE status = 'ARCHIVE' AND archived_time <= NOW() - INTERVAL '10 Minutes'",
+			"DELETE FROM events WHERE status = 'ARCHIVE' AND archived_time <= NOW() - INTERVAL '46 Hour'",
 		)
 		if err != nil {
 			log.Printf("Error deleting logs: %v", err)

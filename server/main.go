@@ -13,10 +13,10 @@ var (
 // @version 1.0
 // @description This is an API for the Event Trigger application.
 
-// @host 18.205.239.53:8080
+// @host localhost:8080
 // @BasePath /v1
 func main() {
-
+	// Create a new server
 	a := routes.New(apiVersion)
 
 	a.Start(a.Engine)

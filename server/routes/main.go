@@ -36,7 +36,7 @@ func (a *Api) Init(version string) (*gin.Engine, error) {
 	r.Use(gin.Logger())
 
 	a.Engine = r
-	a.AddReotes(version)
+	a.AddRoutes(version)
 	a.WithServer()
 
 	// Run migrations and initialize Go routines
@@ -46,7 +46,7 @@ func (a *Api) Init(version string) (*gin.Engine, error) {
 	return r, nil
 }
 
-func (a *Api) AddReotes(version string) {
+func (a *Api) AddRoutes(version string) {
 	HealthRoutes(a.Engine, version)
 	UserRoutes(a.Engine, version)
 	TriggerRoutes(a.Engine, version)

@@ -23,7 +23,7 @@ import (
 // @Failure 400 {object} map[string]string "Bad request"
 // @Failure 500 {object} map[string]string "Internal server error"
 // @Router /users/create [post]
-func CreateUser(c *gin.Context) {
+func CreateUserHandler(c *gin.Context) {
 	var req model.User
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -75,7 +75,7 @@ func CreateUser(c *gin.Context) {
 // @Failure 400 {object} map[string]string "Bad request"
 // @Failure 500 {object} map[string]string "Internal server error"
 // @Router /users/{user_id} [delete]
-func DeleteUser(c *gin.Context) {
+func DeleteUserHandler(c *gin.Context) {
 	id := c.Param("user_id")
 	if id == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -107,7 +107,7 @@ func DeleteUser(c *gin.Context) {
 // @Failure 400 {object} map[string]string "Bad request"
 // @Failure 500 {object} map[string]string "Internal server error"
 // @Router /users/{user_id} [get]
-func GetUserByID(c *gin.Context) {
+func GetUserByIDHandler(c *gin.Context) {
 	id := c.Param("user_id")
 	if id == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -138,7 +138,7 @@ func GetUserByID(c *gin.Context) {
 // @Success 200 {array} model.User "List of users"
 // @Failure 500 {object} map[string]string "Internal server error"
 // @Router /users/ [get]
-func ListUsers(c *gin.Context) {
+func ListUsersHandler(c *gin.Context) {
 
 	pgClient := c.MustGet("postgresClient").(*sql.DB)
 
@@ -164,7 +164,7 @@ func ListUsers(c *gin.Context) {
 // @Failure 400 {object} map[string]string "Bad request"
 // @Failure 500 {object} map[string]string "Internal server error"
 // @Router /users/{user_id} [put]
-func EditUser(c *gin.Context) {
+func EditUserHandler(c *gin.Context) {
 	id := c.Param("user_id")
 	if id == "" {
 		c.JSON(http.StatusBadRequest, gin.H{

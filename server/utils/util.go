@@ -9,6 +9,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// Function to generate password hash
 func GeneratePasswordHash(password string) (string, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
@@ -51,6 +52,7 @@ func MakeAPICall(method string, url string, payload []byte) (*http.Response, err
 	return resp, nil
 }
 
+// Function for generating unique id
 func GenerateID() string {
 	return uuid.New().String()
 }
