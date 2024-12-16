@@ -10,5 +10,5 @@ import (
 func HealthRoutes(r *gin.Engine, v string) {
 	u := r.Group(v + "/health")
 	u.Use(middleware.PostgresMiddleware())
-	u.GET("/", handlers.HealthCheck)
+	u.GET("/", handlers.HealthCheckHandler)
 }

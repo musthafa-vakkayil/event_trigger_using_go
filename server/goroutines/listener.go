@@ -9,6 +9,8 @@ import (
 	"github.com/lib/pq"
 )
 
+// This function will be actively listening the the database for any incoming trigger
+// It will Skip the API Trigger
 func ListenForTriggers(db *sql.DB, triggerChannel chan<- string) {
 	dbString := os.Getenv("DB_CONNECTION")
 	listener := pq.NewListener(dbString,

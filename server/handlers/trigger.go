@@ -25,7 +25,7 @@ import (
 // @Failure 400 {object} map[string]string "Bad request"
 // @Failure 500 {object} map[string]string "Internal server error"
 // @Router /triggers/create [post]
-func CreateTrigger(c *gin.Context) {
+func CreateTriggerHandler(c *gin.Context) {
 	var req model.TriggerDto
 
 	// Parse and validate the input payload
@@ -115,7 +115,7 @@ func CreateTrigger(c *gin.Context) {
 // @Failure 400 {object} map[string]string "Bad request"
 // @Failure 500 {object} map[string]string "Internal server error"
 // @Router /trigegrs/{trigger_id} [delete]
-func DeleteTrigger(c *gin.Context) {
+func DeleteTriggerHandler(c *gin.Context) {
 	id := c.Param("trigger_id")
 	if id == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -147,7 +147,7 @@ func DeleteTrigger(c *gin.Context) {
 // @Failure 400 {object} map[string]string "Bad request"
 // @Failure 500 {object} map[string]string "Internal server error"
 // @Router /triggers/{trigger_id} [get]
-func GetTriggerByID(c *gin.Context) {
+func GetTriggerByIDHandler(c *gin.Context) {
 	id := c.Param("trigger_id")
 	if id == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -178,7 +178,7 @@ func GetTriggerByID(c *gin.Context) {
 // @Success 200 {array} model.Trigger "List of triggers"
 // @Failure 500 {object} map[string]string "Internal server error"
 // @Router /triggers/ [get]
-func ListTriggers(c *gin.Context) {
+func ListTriggersHandler(c *gin.Context) {
 
 	pgClient := c.MustGet("postgresClient").(*sql.DB)
 
@@ -204,7 +204,7 @@ func ListTriggers(c *gin.Context) {
 // @Failure 400 {object} map[string]string "Bad request"
 // @Failure 500 {object} map[string]string "Internal server error"
 // @Router /triggers/{trigger_id} [put]
-func EditTrigger(c *gin.Context) {
+func EditTriggerHandler(c *gin.Context) {
 	var req model.EditTriggerDto
 
 	// Parse query parameter `trigger_id`
@@ -318,7 +318,7 @@ func EditTrigger(c *gin.Context) {
 // @Failure 400 {object} map[string]string "Bad request"
 // @Failure 500 {object} map[string]string "Internal server error"
 // @Router /triggers/api/{trigger_id} [get]
-func TriggerAPI(c *gin.Context) {
+func TriggerAPIHandler(c *gin.Context) {
 	id := c.Param("trigger_id")
 	if id == "" {
 		c.JSON(http.StatusBadRequest, gin.H{

@@ -14,7 +14,7 @@ import (
 // @Produce  json
 // @Success 200 {object} map[string]string
 // @Router /health/ [get]
-func HealthCheck(c *gin.Context) {
+func HealthCheckHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Server is Up and Running",

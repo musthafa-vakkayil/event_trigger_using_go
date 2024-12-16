@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// This Function Will handle the incoming trigegr
 func ProcessTriggers(triggerChannel <-chan string, db *sql.DB) {
 	for triggerID := range triggerChannel {
 		go func(id string) {

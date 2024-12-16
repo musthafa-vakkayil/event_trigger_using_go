@@ -29,6 +29,7 @@ func ListTriggers(db *sql.DB) ([]model.Trigger, error) {
 
 	var triggers []model.Trigger
 
+	// Loop Through each item from the response and create a array of objects
 	for rows.Next() {
 		var triger model.Trigger
 		if err := rows.Scan(
