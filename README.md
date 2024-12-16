@@ -29,7 +29,7 @@ A key feature of the system is the detailed logs for executed triggers:
 - After 2 hours, they are moved to the **ARCHIVE** state and are hidden by default.
 - Archived logs can still be viewed and are deleted after 46 hours.
 
-Timings for log states can be easily adjusted in the code.
+Timings for log states can be easily adjusted in the code. For the Deployed Solution the Archive time is 5 Minutes and Delete Time is 10 Minutes after Archiving
 
 ### Additional Features
 - Users can test **one-time scheduled triggers** and **API triggers** without storing them in the database by sending the same payload used for creating triggers. 
